@@ -14,8 +14,7 @@
 """
     tradfri-status.py - getting status of the Ikea Tradfri smart lights
 
-    This module requires libcoap with dTLS compiled, at this moment there is no python coap module
-    that supports coap with dTLS. see ../bin/README how to compile libcoap with dTLS support
+    This module requires libcoap version >= 4.2, with DTLS support.
 """
 
 # pylint convention disablement:
@@ -27,28 +26,23 @@ from __future__ import print_function
 
 import sys
 import time
-import ConfigParser
 
-from tradfri import tradfriStatus
+from tradfri import tradfriStatus, tradfriObject
 from tqdm import tqdm
 
 def main():
     """ main function """
-    conf = ConfigParser.ConfigParser()
-    conf.read('tradfri.cfg')
-
-    hubip = conf.get('tradfri', 'hubip')
-    securityid = conf.get('tradfri', 'securityid')
+    tradfri = tradfriObject.Tradfri()
 
     lightbulb = []
     lightgroup = []
 
     print('[ ] Tradfri: acquiring all Tradfri devices, please wait ...')
-    devices = tradfriStatus.tradfri_get_devices(hubip, securityid)
-    groups = tradfriStatus.tradfri_get_groups(hubip, securityid)
+    devices = tradfriStatus.tradfri_get_devices(tradfri)
+    groups = tradfriStatus.tradfri_get_groups(tradfri)
 
     for deviceid in tqdm(range(len(devices)), desc='Tradfri lightbulbs', unit=' lightbulb'):
-        lightbulb.append(tradfriStatus.tradfri_get_lightbulb(hubip, securityid,
+        lightbulb.append(tradfriStatus.tradfri_get_lightbulb(tradfri,
                                                              str(devices[deviceid])))
 
     # sometimes the request are to fast, the will decline the request (flood security)
@@ -56,7 +50,7 @@ def main():
     time.sleep(.5)
 
     for groupid in tqdm(range(len(groups)), desc='Tradfri groups', unit=' group'):
-        lightgroup.append(tradfriStatus.tradfri_get_group(hubip, securityid,
+        lightgroup.append(tradfriStatus.tradfri_get_group(tradfri,
                                                           str(groups[groupid])))
 
     print('[+] Tradfri: device information gathered')
