@@ -2,15 +2,12 @@
 python framework for controlling the Ikea smart lights (tradfri)
 
 ### requirements
-at this moment there is no coap libs with dTLS, the ikea smart lights are using dTLS with coap for security. the only option is to build a new libcoap with dTLS included. libcoap requires `cunit, a2x, doxygen and dot` you need to install these requirements first.
 
-when this is installed run the build script for compiling libcoap
-```bash
-cd bin
-./build.sh
-```
+To use this collection of small scripts for interacting with the Ikea
+smart home "gateway" you will need [libcoap](https://libcoap.net)
+version >= 4.2 with DTLS support.
 
-the framework also requires `tqdm` for showing progressbars, you could strip it from the sourcecode or install the module for python: `pip install pip --upgrade && pip install tqdm`.
+The framework also requires `tqdm` for showing progressbars, you could strip it from the sourcecode or install the module for python: `pip install pip --upgrade && pip install tqdm`.
 
 ### libcoap usage
 ```bash
