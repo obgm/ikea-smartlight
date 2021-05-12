@@ -41,7 +41,7 @@ def tradfri_dim_light(tradfri, lightbulbid, value):
     payload = '{ "3311" : [{ "5851" : %s }] }' % int(dim)
     return tradfri.put(path, payload)
 
-def tradfri_color_light(hubip, securityid, lightbulbid, value):
+def tradfri_color_light(tradfri, lightbulbid, value):
     """ function for color temperature tradfri lightbulb """
     path = '/15001/{}'.format(lightbulbid)
     if value == 'warm':
@@ -52,13 +52,13 @@ def tradfri_color_light(hubip, securityid, lightbulbid, value):
         payload = '{ "3311" : [{ "5709" : %s, "5710": %s }] }' % ("24930", "24684")
     return tradfri.put(path, payload)
 
-def tradfri_power_group(hubip, securityid, groupid, value):
+def tradfri_power_group(tradfri, groupid, value):
     """ function for power on/off tradfri lightbulb """
     path = '/15004/{}'.format(groupid)
     payload = '{ "3311": [{ "5850": %d }] }' % int(value=='on')
     return tradfri.put(path, payload)
 
-def tradfri_dim_group(hubip, securityid, groupid, value):
+def tradfri_dim_group(tradfri, groupid, value):
     """ function for dimming tradfri lightbulb """
     path = '/15004/{}'.format(lightbulbid)
     dim = float(value) * 2.55
