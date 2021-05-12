@@ -14,8 +14,7 @@
 """
     tradfri-groupss.py - controlling the Ikea Tradfri smart groups
 
-    This module requires libcoap with dTLS compiled, at this moment there is no python coap module
-    that supports coap with dTLS. see ../bin/README how to compile libcoap with dTLS support
+    This module requires libcoap version >= 4.2, with DTLS support.
 """
 
 # pylint convention disablement:
@@ -26,10 +25,9 @@
 from __future__ import print_function
 
 import sys
-import ConfigParser
 import argparse
 
-from tradfri import tradfriActions
+from tradfri import tradfriActions, tradfriObject
 
 def parse_args():
     """ function for getting parsed arguments """
@@ -47,21 +45,17 @@ def parse_args():
 def main():
     """ main function """
     args = parse_args()
-    conf = ConfigParser.ConfigParser()
-    conf.read('tradfri.cfg')
-
-    hubip = conf.get('tradfri', 'hubip')
-    securityid = conf.get('tradfri', 'securityid')
+    tradfri = tradfriObject.Tradfri()
 
     if args.action == 'power':
         if args.value == 'on' or args.value == 'off':
-            tradfriActions.tradfri_power_group(hubip, securityid, args.groupid, args.value)
+            tradfriActions.tradfri_power_group(tradfri, args.groupid, args.value)
         else:
             sys.stderr.write('[-] Tradfri: power state can only be on/off\n')
             sys.exit(1)
     elif args.action == 'brightness':
         if 0 <= int(args.value) <= 100:
-            tradfriActions.tradfri_dim_group(hubip, securityid, args.groupid, args.value)
+            tradfriActions.tradfri_dim_group(tradfri, args.groupid, args.value)
         else:
             sys.stderr.write('[-] Tradfri: dim value can only be between 1 and 100\n')
             sys.exit(1)
